@@ -1,4 +1,4 @@
-<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 /**
  * SEO Lite (Pro) Module Control Panel File
@@ -11,29 +11,29 @@
  */
 class Seo_lite_mcp
 {
-	var $base;			// the base url for this module
-	var $form_base;		// base url for forms
-	var $module_name = "seo_lite";
+    var $base;             // the base url for this module
+    var $form_base;        // base url for forms
+    var $module_name = "seo_lite";
 
     private bool $isPublisherInstalled;
 
-	function __construct( $switch = TRUE )
-	{
+    function __construct($switch = TRUE)
+    {
         // uncomment this if you want navigation buttons at the top
-		ee()->cp->set_right_nav(array(
-				'settings'			=> $this->base,
-				'docs'	=> 'https://github.com/0to9Digital/SEO-Lite-v2',
-			));
+        ee()->cp->set_right_nav(array(
+            'settings' => $this->base,
+            'docs' => 'https://github.com/0to9Digital/SEO-Lite-v2',
+        ));
 
-		//  Onward!
-		ee()->load->library('table');
-		ee()->load->library('javascript');
-		ee()->load->helper('form');
-		ee()->lang->loadfile('seo_lite');
+        //  Onward!
+        ee()->load->library('table');
+        ee()->load->library('javascript');
+        ee()->load->helper('form');
+        ee()->lang->loadfile('seo_lite');
 
         // The Control Panel's left sidebar is built with the Sidebar Service:
         $sidebar = ee('CP/Sidebar')->make();
-        if(substr(APP_VER, 0, 1) < 6) {
+        if (substr(APP_VER, 0, 1) < 6) {
             // IF EE5
             $sidebar_list = $sidebar->addHeader('Sidebar');
             $sidebar_items = $sidebar_list->addBasicList();
@@ -53,24 +53,24 @@ class Seo_lite_mcp
         ee('CP/URL', 'addons/settings/seo_lite/audit_entry');
 
         ee()->cp->add_to_head("<link rel='stylesheet' href='" . URL_THIRD_THEMES . "seo_lite/css/seo_lite.css?v2.2.2'>");
-        ee()->cp->add_to_foot("<script type='text/javascript' charset='utf-8' src='". URL_THIRD_THEMES . "seo_lite/js/seo_lite.js?v2.2.2'></script>");
+        ee()->cp->add_to_foot("<script type='text/javascript' charset='utf-8' src='" . URL_THIRD_THEMES . "seo_lite/js/seo_lite.js?v2.2.2'></script>");
 
         $this->isPublisherInstalled = $this->isPublisherInstalled();
-	}
+    }
 
-	function index()
-	{
-		$vars = array();
+    function index()
+    {
+        $vars = array();
 
         $site_id = ee()->config->item('site_id');
         $config = ee()->db->get_where('seolite_config', array('site_id' => $site_id));
 
-        if($config->num_rows() == 0) // we did not find any config for this site id, so just load any other
+        if ($config->num_rows() == 0) // we did not find any config for this site id, so just load any other
         {
             $config = ee()->db->get_where('seolite_config');
         }
 
-		$vars['template'] = $config->row('template');
+        $vars['template'] = $config->row('template');
         $vars['default_description'] = $config->row('default_description');
         $vars['default_keywords'] = $config->row('default_keywords');
         $vars['default_title_postfix'] = $config->row('default_title_postfix');
@@ -79,22 +79,23 @@ class Seo_lite_mcp
         $vars['default_twitter_description'] = $config->row('default_twitter_description');
         $vars['default_twitter_image'] = $config->row('default_twitter_image');
         $vars['include_pagination_in_canonical'] = $config->row('include_pagination_in_canonical');
-        $vars['save_settings_url'] =  ee('CP/URL', 'addons/settings/seo_lite/save_settings');
+        $vars['save_settings_url'] = ee('CP/URL', 'addons/settings/seo_lite/save_settings');
 
         $view = ee('View')->make('seo_lite:index');
 
         return $view->render($vars);
-	}
+    }
 
     function instructions()
-	{
+    {
 
         $view = ee('View')->make('seo_lite:instructions');
 
         return $view->render();
-	}
+    }
 
-    function getAuditOverviewData() {
+    function getAuditOverviewData()
+    {
         $page = intval(ee()->input->get('page'));
         $per_page = 15;
         $site_id = ee()->config->item('site_id');
@@ -114,7 +115,7 @@ class Seo_lite_mcp
 
         if ($this->isPublisherInstalled) {
             $data['entries'] =
-            ee()->db->select('
+                ee()->db->select('
                 ct.entry_id,
                 ct.title,
                 sl.title as meta_title,
@@ -134,17 +135,17 @@ class Seo_lite_mcp
                 sl.publisher_status as publisher_status,
                 pub.short_name as language_name
             ')
-            ->from('channel_titles ct')
-            ->where('ct.site_id', $site_id)
-            ->limit($per_page, $start_num)
-            ->order_by('ct.entry_id', 'desc')
-            ->join('publisher_seolite_content sl', 'ct.entry_id = sl.entry_id', 'left')
-            ->join('publisher_languages pub', 'sl.publisher_lang_id = pub.id', 'left')
-            ->get()
-            ->result_array();
+                    ->from('channel_titles ct')
+                    ->where('ct.site_id', $site_id)
+                    ->limit($per_page, $start_num)
+                    ->order_by('ct.entry_id', 'desc')
+                    ->join('publisher_seolite_content sl', 'ct.entry_id = sl.entry_id', 'left')
+                    ->join('publisher_languages pub', 'sl.publisher_lang_id = pub.id', 'left')
+                    ->get()
+                    ->result_array();
         } else {
             $data['entries'] =
-            ee()->db->select('
+                ee()->db->select('
                 ct.entry_id,
                 ct.title,
                 sl.title as meta_title,
@@ -161,12 +162,12 @@ class Seo_lite_mcp
                 sl.twitter_description as twitter_description,
                 sl.twitter_image as twitter_image
             ')
-            ->from('channel_titles ct')
-            ->where('ct.site_id', $site_id)
-            ->limit($per_page, $start_num)
-            ->join('seolite_content sl', 'ct.entry_id = sl.entry_id', 'left')
-            ->get()
-            ->result_array();
+                    ->from('channel_titles ct')
+                    ->where('ct.site_id', $site_id)
+                    ->limit($per_page, $start_num)
+                    ->join('seolite_content sl', 'ct.entry_id = sl.entry_id', 'left')
+                    ->get()
+                    ->result_array();
         }
 
         // Get pagination
@@ -180,11 +181,12 @@ class Seo_lite_mcp
         return $data;
     }
 
-    function getAuditEntryData($publisherLangId) {
+    function getAuditEntryData($publisherLangId)
+    {
         $site_id = ee()->config->item('site_id');
         $entry_id = ee()->input->get('entry_id');
 
-        if($this->isPublisherInstalled) {
+        if ($this->isPublisherInstalled) {
             $data = ee()->db->select('
                 ct.entry_id,
                 ct.title,
@@ -212,14 +214,14 @@ class Seo_lite_mcp
                 pub.short_name as language_name,
                 pub.short_name_segment as language_segment
             ')
-            ->from('channel_titles ct')
-            ->where('ct.entry_id', $entry_id)
-            ->where('publisher_lang_id', $publisherLangId)
-            ->where('ct.site_id', $site_id)
-            ->join('publisher_seolite_content sl', 'ct.entry_id = sl.entry_id', 'left')
-            ->join('seolite_config sld', 'ct.site_id = sld.site_id', 'left')
-            ->join('publisher_languages pub', 'sl.publisher_lang_id = pub.id', 'left')
-            ->get();
+                ->from('channel_titles ct')
+                ->where('ct.entry_id', $entry_id)
+                ->where('publisher_lang_id', $publisherLangId)
+                ->where('ct.site_id', $site_id)
+                ->join('publisher_seolite_content sl', 'ct.entry_id = sl.entry_id', 'left')
+                ->join('seolite_config sld', 'ct.site_id = sld.site_id', 'left')
+                ->join('publisher_languages pub', 'sl.publisher_lang_id = pub.id', 'left')
+                ->get();
 
         } else {
             $data = ee()->db->select('
@@ -246,15 +248,15 @@ class Seo_lite_mcp
                 sld.default_twitter_description as default_twitter_description,
                 sld.default_twitter_image as default_twitter_image
             ')
-            ->from('channel_titles ct')
-            ->where('ct.entry_id', $entry_id)
-            ->where('ct.site_id', $site_id)
-            ->join('seolite_content sl', 'ct.entry_id = sl.entry_id', 'left')
-            ->join('seolite_config sld', 'ct.site_id = sld.site_id', 'left')
-            ->get();
+                ->from('channel_titles ct')
+                ->where('ct.entry_id', $entry_id)
+                ->where('ct.site_id', $site_id)
+                ->join('seolite_content sl', 'ct.entry_id = sl.entry_id', 'left')
+                ->join('seolite_config sld', 'ct.site_id = sld.site_id', 'left')
+                ->get();
         }
 
-        if($data->num_rows == 0) {
+        if ($data->num_rows == 0) {
             $data = ee()->db->select('
                 ct.entry_id,
                 ct.title,
@@ -266,36 +268,37 @@ class Seo_lite_mcp
                 sld.default_twitter_description as default_twitter_description,
                 sld.default_twitter_image as default_twitter_image
             ')
-            ->from('channel_titles ct')
-            ->where('ct.entry_id', $entry_id)
-            ->where('ct.site_id', $site_id)
-            ->join('seolite_config sld', 'ct.site_id = sld.site_id', 'left')
-            ->get();
+                ->from('channel_titles ct')
+                ->where('ct.entry_id', $entry_id)
+                ->where('ct.site_id', $site_id)
+                ->join('seolite_config sld', 'ct.site_id = sld.site_id', 'left')
+                ->get();
         }
 
         return $data->result_array()[0];
     }
 
-    function isPublisherInstalled() {
+    function isPublisherInstalled()
+    {
         return ee('Addon')->get('publisher') && ee('Addon')->get('publisher')->isInstalled();
     }
 
     function audit_overview()
-	{
-        $vars['data'] =  $this->getAuditOverviewData();
+    {
+        $vars['data'] = $this->getAuditOverviewData();
         $vars['data']['publisher'] = $this->isPublisherInstalled;
 
         $view = ee('View')->make('seo_lite:audit_overview');
         return $view->render($vars);
-	}
+    }
 
     function audit_entry()
-	{
+    {
         $publisherLangId = ee()->input->get('publisher_id');
-        $vars['data'] =  $this->getAuditEntryData($publisherLangId);
+        $vars['data'] = $this->getAuditEntryData($publisherLangId);
         $vars['data']['publisher'] = $this->isPublisherInstalled;
 
-        if($this->isPublisherInstalled) {
+        if ($this->isPublisherInstalled) {
             $vars['data']['publisher_id'] = $publisherLangId;
             $vars['data']['languages'] = ee()->db->select('
                 id,
@@ -303,20 +306,20 @@ class Seo_lite_mcp
                 long_name,
                 short_name_segment
             ')
-            ->from('publisher_languages')
-            ->where('is_enabled', 'y')
-            ->get()
-            ->result_array();
+                ->from('publisher_languages')
+                ->where('is_enabled', 'y')
+                ->get()
+                ->result_array();
         }
 
         $view = ee('View')->make('seo_lite:audit_entry');
 
         return $view->render($vars);
-	}
+    }
 
-	function save_settings()
-	{
-		$template = ee()->input->post('seolite_template');
+    function save_settings()
+    {
+        $template = ee()->input->post('seolite_template');
         $default_keywords = ee()->input->post('seolite_default_keywords');
         $default_description = ee()->input->post('seolite_default_description');
         $default_title_postfix = ee()->input->post('seolite_default_title_postfix');
@@ -331,24 +334,21 @@ class Seo_lite_mcp
         $config = ee()->db->get_where('seolite_config', array('site_id' => $site_id));
 
         $data_arr = array(
-                'template' => $template,
-                'default_keywords' => $default_keywords,
-                'default_description' => $default_description,
-                'default_title_postfix' => $default_title_postfix,
-                'default_og_description' => $default_og_description,
-                'default_og_image' => $default_og_image,
-                'default_twitter_description' => $default_twitter_description,
-                'default_twitter_image' => $default_twitter_image,
-                'include_pagination_in_canonical' => $include_pagination_in_canonical,
-            );
+            'template' => $template,
+            'default_keywords' => $default_keywords,
+            'default_description' => $default_description,
+            'default_title_postfix' => $default_title_postfix,
+            'default_og_description' => $default_og_description,
+            'default_og_image' => $default_og_image,
+            'default_twitter_description' => $default_twitter_description,
+            'default_twitter_image' => $default_twitter_image,
+            'include_pagination_in_canonical' => $include_pagination_in_canonical,
+        );
 
-        if($config->num_rows() == 0)
-        {
+        if ($config->num_rows() == 0) {
             $data_arr['site_id'] = $site_id;
             ee()->db->insert('seolite_config', $data_arr);
-        }
-        else
-        {
+        } else {
             ee()->db->where('site_id', $site_id);
             ee()->db->update('seolite_config', $data_arr);
         }
@@ -359,8 +359,8 @@ class Seo_lite_mcp
             ->addToBody(lang('seolite_settings_saved'))
             ->defer();
 
-		ee()->functions->redirect(ee('CP/URL', 'addons/settings/seo_lite'));
-	}
+        ee()->functions->redirect(ee('CP/URL', 'addons/settings/seo_lite'));
+    }
 
 }
 

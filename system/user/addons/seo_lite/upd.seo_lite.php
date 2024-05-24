@@ -9,7 +9,6 @@
  * @author     0to9 Digital - Robin Treur
  * @link       https://0to9.nl
  */
-
 class Seo_lite_upd
 {
 
@@ -39,7 +38,7 @@ class Seo_lite_upd
         }
 
         $data = array(
-            'module_name'      => $this->module_name,
+            'module_name' => $this->module_name,
             'module_version' => $this->version,
             'has_cp_backend' => 'y',
             'has_publish_fields' => 'y'
@@ -207,88 +206,88 @@ class Seo_lite_upd
     {
         $tabs['seo_lite'] = array(
             'seo_lite_title' => array(
-                'visible'    => 'true',
-                'collapse'    => 'false',
-                'htmlbuttons'    => 'false',
-                'width'        => '100%'
+                'visible' => 'true',
+                'collapse' => 'false',
+                'htmlbuttons' => 'false',
+                'width' => '100%'
             ),
             'seo_lite_keywords' => array(
-                'visible'    => 'true',
-                'collapse'    => 'false',
-                'htmlbuttons'    => 'false',
-                'width'        => '100%'
+                'visible' => 'true',
+                'collapse' => 'false',
+                'htmlbuttons' => 'false',
+                'width' => '100%'
             ),
             'seo_lite_description' => array(
-                'visible'    => 'true',
-                'collapse'    => 'false',
-                'htmlbuttons'    => 'false',
-                'width'        => '100%',
+                'visible' => 'true',
+                'collapse' => 'false',
+                'htmlbuttons' => 'false',
+                'width' => '100%',
             ),
             'seo_lite_robots_directive' => array(
-                'visible'    => 'true',
-                'collapse'    => 'false',
-                'htmlbuttons'    => 'false',
-                'width'        => '100%',
+                'visible' => 'true',
+                'collapse' => 'false',
+                'htmlbuttons' => 'false',
+                'width' => '100%',
             ),
             'seo_lite_og_title' => array(
-                'visible'    => 'true',
-                'collapse'    => 'false',
-                'htmlbuttons'    => 'false',
-                'width'        => '100%',
+                'visible' => 'true',
+                'collapse' => 'false',
+                'htmlbuttons' => 'false',
+                'width' => '100%',
             ),
             'seo_lite_og_type' => array(
-                'visible'    => 'true',
-                'collapse'    => 'false',
-                'htmlbuttons'    => 'false',
-                'width'        => '100%',
+                'visible' => 'true',
+                'collapse' => 'false',
+                'htmlbuttons' => 'false',
+                'width' => '100%',
             ),
             'seo_lite_og_description' => array(
-                'visible'    => 'true',
-                'collapse'    => 'false',
-                'htmlbuttons'    => 'false',
-                'width'        => '100%',
+                'visible' => 'true',
+                'collapse' => 'false',
+                'htmlbuttons' => 'false',
+                'width' => '100%',
             ),
             'seo_lite_og_url' => array(
-                'visible'    => 'true',
-                'collapse'    => 'false',
-                'htmlbuttons'    => 'false',
-                'width'        => '100%',
+                'visible' => 'true',
+                'collapse' => 'false',
+                'htmlbuttons' => 'false',
+                'width' => '100%',
             ),
             'seo_lite_og_image' => array(
-                'visible'    => 'true',
-                'collapse'    => 'false',
-                'htmlbuttons'    => 'false',
-                'width'        => '100%',
+                'visible' => 'true',
+                'collapse' => 'false',
+                'htmlbuttons' => 'false',
+                'width' => '100%',
             ),
             'seo_lite_twitter_title' => array(
-                'visible'    => 'true',
-                'collapse'    => 'false',
-                'htmlbuttons'    => 'false',
-                'width'        => '100%',
+                'visible' => 'true',
+                'collapse' => 'false',
+                'htmlbuttons' => 'false',
+                'width' => '100%',
             ),
             'seo_lite_twitter_type' => array(
-                'visible'    => 'true',
-                'collapse'    => 'false',
-                'htmlbuttons'    => 'false',
-                'width'        => '100%',
+                'visible' => 'true',
+                'collapse' => 'false',
+                'htmlbuttons' => 'false',
+                'width' => '100%',
             ),
             'seo_lite_twitter_description' => array(
-                'visible'    => 'true',
-                'collapse'    => 'false',
-                'htmlbuttons'    => 'false',
-                'width'        => '100%',
+                'visible' => 'true',
+                'collapse' => 'false',
+                'htmlbuttons' => 'false',
+                'width' => '100%',
             ),
             'seo_lite_twitter_type' => array(
-                'visible'    => 'true',
-                'collapse'    => 'false',
-                'htmlbuttons'    => 'false',
-                'width'        => '100%',
+                'visible' => 'true',
+                'collapse' => 'false',
+                'htmlbuttons' => 'false',
+                'width' => '100%',
             ),
             'seo_lite_twitter_image' => array(
-                'visible'    => 'true',
-                'collapse'    => 'false',
-                'htmlbuttons'    => 'false',
-                'width'        => '100%',
+                'visible' => 'true',
+                'collapse' => 'false',
+                'htmlbuttons' => 'false',
+                'width' => '100%',
             ),
         );
 
