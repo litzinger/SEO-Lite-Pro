@@ -8,10 +8,10 @@ function getMeta() {
     <div class="panel theme--ee<?=substr(APP_VER, 0, 1)?>">
         <div class="panel-heading">
             <div class="title-bar">
-                <h3 class="title-bar__title"><?=lang('audit_overview')?></h3>					
+                <h3 class="title-bar__title"><?=lang('audit_overview')?></h3>
             </div>
-        </div> 
-        <div class="panel-body"> 
+        </div>
+        <div class="panel-body">
             <div class="col-group">
                 <div class="txt-wrap">
                     <?php if (empty($data['entries'])) : ?>
@@ -31,11 +31,11 @@ function getMeta() {
                                 </tr>
                             </thead>
                             <tbody>
-                            <?php foreach ($data['entries'] as $entry) : 
+                            <?php foreach ($data['entries'] as $entry) :
                                 $publisher_id = isset($entry['publisher_lang_id']) ? $entry['publisher_lang_id'] : '1';
                             ?>
                                 <tr>
-                                    <td class="audit__id"><?= $entry['entry_id'] ?><?= isset($entry['language_name']) ? '<span class="audit__language">'.$entry['language_name'].'</span>' : '' ?> <?= isset($entry['publisher_status']) ? '<span class="audit__language">'.$entry['publisher_status'].'</span>' : '' ?></td>
+                                    <td class="audit__id"><?= $entry['entry_id'] ?><?= isset($entry['language_name']) ? ' <span class="translation-tag st-'. $entry['publisher_status'] .'">'.$entry['language_name'].'</span>' : '' ?></td>
                                     <td class="audit__title"><?= $entry['title'] ?></td>
                                     <td class="audit__status">
                                         <div class="audit__status-item<?= empty($entry['title']) ? ' is--empty' : ' is--full'  ?>" data-name="Title">T</div>
@@ -57,8 +57,10 @@ function getMeta() {
                                         <div class="audit__status-item<?= empty($entry['twitter_image']) ? ' is--empty' : ' is--full'  ?>" data-name="Image">I</div>
                                     </td>
                                     <td class="audit__buttons">
-                                        <a href="<?= ee('CP/URL', 'publish/edit/entry/'. $entry['entry_id'])?>" class="button button--secondary">Edit page <i class="button__icon fal fa-edit"></i></a>
-                                        <a href="<?= isset($data['publisher']) ? ee('CP/URL', 'addons/settings/seo_lite/audit_entry')->setQueryStringVariable('entry_id', $entry['entry_id'])->setQueryStringVariable('publisher_id', $publisher_id) : ee('CP/URL', 'addons/settings/seo_lite/audit_entry')->setQueryStringVariable('entry_id', $entry['entry_id']) ?>" class="button button--primary">More details<i class="button__icon fal fa-chevron-right"></i></a>
+                                        <div class="button-group button-group-xsmall">
+                                            <a class="fas fa-edit button button--default" title="Edit Entry" href="<?= ee('CP/URL', 'publish/edit/entry/'. $entry['entry_id'])?>"><span class="hidden">Edit Entry</span></a>
+                                            <a class="fas fa-chart-simple button button--default" title="Audit Entry" href="<?= isset($data['publisher']) ? ee('CP/URL', 'addons/settings/seo_lite/audit_entry')->setQueryStringVariable('entry_id', $entry['entry_id'])->setQueryStringVariable('publisher_id', $publisher_id) : ee('CP/URL', 'addons/settings/seo_lite/audit_entry')->setQueryStringVariable('entry_id', $entry['entry_id']) ?>"><span class="hidden">Entry Audit</span></a>
+                                        </div>
                                     </td>
                                 </tr>
                             <?php endforeach;?>
