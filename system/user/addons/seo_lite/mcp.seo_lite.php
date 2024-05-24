@@ -9,20 +9,21 @@
  * @author     0to9 Digital - Robin Treur
  * @link       https://0to9.nl
  */
-class Seo_lite_mcp 
+class Seo_lite_mcp
 {
-	var $base;			// the base url for this module			
+	var $base;			// the base url for this module
 	var $form_base;		// base url for forms
-	var $module_name = "seo_lite";	
+	var $module_name = "seo_lite";
+
+    private bool $isPublisherInstalled;
 
 	function __construct( $switch = TRUE )
-	{   
+	{
         // uncomment this if you want navigation buttons at the top
 		ee()->cp->set_right_nav(array(
 				'settings'			=> $this->base,
 				'docs'	=> 'https://github.com/0to9Digital/SEO-Lite-v2',
 			));
-
 
 		//  Onward!
 		ee()->load->library('table');
@@ -48,14 +49,16 @@ class Seo_lite_mcp
             $audit = $sidebar->addItem('Audit Overview', ee('CP/URL', 'addons/settings/seo_lite/audit_overview'));
             $audit->withIcon('clipboard-check');
         }
-        
+
         ee('CP/URL', 'addons/settings/seo_lite/audit_entry');
 
         ee()->cp->add_to_head("<link rel='stylesheet' href='" . URL_THIRD_THEMES . "seo_lite/css/seo_lite.css?v2.2.2'>");
         ee()->cp->add_to_foot("<script type='text/javascript' charset='utf-8' src='". URL_THIRD_THEMES . "seo_lite/js/seo_lite.js?v2.2.2'></script>");
+
+        $this->isPublisherInstalled = $this->isPublisherInstalled();
 	}
 
-	function index() 
+	function index()
 	{
 		$vars = array();
 
@@ -83,7 +86,7 @@ class Seo_lite_mcp
         return $view->render($vars);
 	}
 
-    function instructions() 
+    function instructions()
 	{
 
         $view = ee('View')->make('seo_lite:instructions');
@@ -91,7 +94,7 @@ class Seo_lite_mcp
         return $view->render();
 	}
 
-    function getAuditOverviewData($publisherInstalled) {
+    function getAuditOverviewData() {
         $page = intval(ee()->input->get('page'));
         $per_page = 15;
         $site_id = ee()->config->item('site_id');
@@ -108,8 +111,8 @@ class Seo_lite_mcp
         } else {
             $total_records = $total;
         }
-        
-        if ($publisherInstalled) {
+
+        if ($this->isPublisherInstalled) {
             $data['entries'] =
             ee()->db->select('
                 ct.entry_id,
@@ -176,13 +179,12 @@ class Seo_lite_mcp
 
         return $data;
     }
-    
-    function getAuditEntryData($publisherInstalled, $publisher_id) {
+
+    function getAuditEntryData($publisherLangId) {
         $site_id = ee()->config->item('site_id');
         $entry_id = ee()->input->get('entry_id');
-        
 
-        if($publisherInstalled) {
+        if($this->isPublisherInstalled) {
             $data = ee()->db->select('
                 ct.entry_id,
                 ct.title,
@@ -212,13 +214,13 @@ class Seo_lite_mcp
             ')
             ->from('channel_titles ct')
             ->where('ct.entry_id', $entry_id)
-            ->where('publisher_lang_id', $publisher_id)
+            ->where('publisher_lang_id', $publisherLangId)
             ->where('ct.site_id', $site_id)
             ->join('publisher_seolite_content sl', 'ct.entry_id = sl.entry_id', 'left')
             ->join('seolite_config sld', 'ct.site_id = sld.site_id', 'left')
             ->join('publisher_languages pub', 'sl.publisher_lang_id = pub.id', 'left')
             ->get();
-            
+
         } else {
             $data = ee()->db->select('
                 ct.entry_id,
@@ -251,7 +253,7 @@ class Seo_lite_mcp
             ->join('seolite_config sld', 'ct.site_id = sld.site_id', 'left')
             ->get();
         }
-        
+
         if($data->num_rows == 0) {
             $data = ee()->db->select('
                 ct.entry_id,
@@ -273,31 +275,28 @@ class Seo_lite_mcp
 
         return $data->result_array()[0];
     }
-    
-    function PublisherInstalled() {
+
+    function isPublisherInstalled() {
         return ee('Addon')->get('publisher') && ee('Addon')->get('publisher')->isInstalled();
     }
 
-    function audit_overview() 
+    function audit_overview()
 	{
-        $publisher = $this->PublisherInstalled();
-        
-        $vars['data'] =  $this->getAuditOverviewData($publisher);
-        $vars['data']['publisher'] = $publisher;
+        $vars['data'] =  $this->getAuditOverviewData();
+        $vars['data']['publisher'] = $this->isPublisherInstalled;
 
         $view = ee('View')->make('seo_lite:audit_overview');
         return $view->render($vars);
 	}
 
-    function audit_entry() 
+    function audit_entry()
 	{
-        $publisher = $this->PublisherInstalled();
-        $publisher_id = ee()->input->get('publisher_id');
-        $vars['data'] =  $this->getAuditEntryData($publisher, $publisher_id);
+        $publisherLangId = ee()->input->get('publisher_id');
+        $vars['data'] =  $this->getAuditEntryData($publisherLangId);
+        $vars['data']['publisher'] = $this->isPublisherInstalled;
 
-        if($publisher) {
-            $vars['data']['publisher'] = $publisher;
-            $vars['data']['publisher_id'] = $publisher_id;
+        if($this->isPublisherInstalled) {
+            $vars['data']['publisher_id'] = $publisherLangId;
             $vars['data']['languages'] = ee()->db->select('
                 id,
                 short_name,
@@ -314,7 +313,7 @@ class Seo_lite_mcp
 
         return $view->render($vars);
 	}
-	
+
 	function save_settings()
 	{
 		$template = ee()->input->post('seolite_template');
@@ -325,7 +324,7 @@ class Seo_lite_mcp
         $default_og_image = ee()->input->post('seolite_default_og_image');
         $default_twitter_description = ee()->input->post('seolite_default_twitter_description');
         $default_twitter_image = ee()->input->post('seolite_default_twitter_image');
-        
+
         $include_pagination_in_canonical = ee()->input->post('seolite_include_pagination_in_canonical');
 
         $site_id = ee()->config->item('site_id');

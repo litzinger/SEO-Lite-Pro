@@ -19,7 +19,7 @@ function getMeta() {
                             <em><?=lang('no_entries')?></em>
                         </div>
                     <?php else : ?>
-                        <table class="audit" cellspacing="0">
+                        <table class="audit">
                             <thead>
                                 <tr>
                                     <th>Entry ID</th>
